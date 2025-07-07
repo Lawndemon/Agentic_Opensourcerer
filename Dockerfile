@@ -20,6 +20,7 @@ ENV APP_ENV=${APP_ENV} \
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
+    bash \
     && pip install --upgrade pip \
     && pip install uv \
     && rm -rf /var/lib/apt/lists/*
@@ -27,6 +28,9 @@ RUN apt-get update && apt-get install -y \
 # Copy pyproject.toml first to leverage Docker cache
 COPY pyproject.toml .
 RUN uv venv && . .venv/bin/activate && uv pip install -e .
+
+# Explicitly copy scripts folder first to ensure entrypoint script is available
+COPY scripts/ /app/scripts/
 
 # Copy the application
 COPY . .

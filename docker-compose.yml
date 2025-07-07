@@ -31,6 +31,22 @@ services:
     networks:
       - monitoring
 
+  # PostgreSQL database
+  db:
+    image: postgres:15-alpine
+    container_name: langgraph-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - monitoring
+    restart: always
+
   # Prometheus
   prometheus:
     image: prom/prometheus:latest
@@ -73,10 +89,10 @@ services:
       - monitoring
     restart: always
 
-
 networks:
   monitoring:
     driver: bridge
 
 volumes:
-  grafana-storage: 
+  grafana-storage:
+  db-data:
